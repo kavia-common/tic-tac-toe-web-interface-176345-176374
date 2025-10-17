@@ -89,7 +89,7 @@
       {board}
       {winningLine}
       disabled={Boolean(winner) || isDraw}
-      on:move={handleMove}
+      onmove={handleMove}
     />
   </div>
 
