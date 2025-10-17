@@ -44,23 +44,36 @@
 
   function handleMove(e: CustomEvent<{ index: number }>) {
     const { index } = e.detail;
-    if (winner || isDraw) return;     // stop if game over
-    if (board[index]) return;         // prevent overwriting moves
+    console.log('[handleMove] click at index', index, 'currentPlayer=', currentPlayer, 'board(before)=', board);
+
+    if (winner || isDraw) {
+      console.log('[handleMove] game over, ignoring click. winner=', winner, 'isDraw=', isDraw);
+      return;     // stop if game over
+    }
+    if (board[index]) {
+      console.log('[handleMove] cell already filled at', index, 'with', board[index]);
+      return;         // prevent overwriting moves
+    }
 
     // create new state array to trigger updates
     const newBoard = board.slice();
     newBoard[index] = currentPlayer;
     board = newBoard;
+    console.log('[handleMove] board(after)=', board);
 
     const { winner: w, line } = checkWinner(board);
+    console.log('[handleMove] checkWinner =>', w, line);
 
     if (w) {
       winner = w;
       winningLine = line;
+      console.log('[handleMove] WINNER!', winner, 'winningLine=', winningLine);
     } else if (board.every(Boolean)) {
       isDraw = true;
+      console.log('[handleMove] DRAW');
     } else {
       currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      console.log('[handleMove] next player =>', currentPlayer);
     }
   }
 
@@ -89,7 +102,7 @@
       {board}
       {winningLine}
       disabled={Boolean(winner) || isDraw}
-      onmove={handleMove}
+      on:move={handleMove}
     />
   </div>
 
